@@ -1,0 +1,25 @@
+env:
+  - CGO_ENABLED=0
+
+builds:
+  - main: .
+    binary: tls-secrets-sync
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.revision={{.ShortCommit}}
+    goos:
+      - linux
+    goarch:
+      - amd64
+
+dockers:
+  - image_templates:
+      - ghcr.io/argentumcode/tls-secrets-sync:v{{.Version}}
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source=https://github.com/argentumcode/tls-secrets-sync"
