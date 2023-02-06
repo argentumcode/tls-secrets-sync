@@ -69,7 +69,7 @@ func (s *SecretManagerSyncer) reconcileSecret(ctx context.Context, secretName st
 	} else if err != nil {
 		return err
 	}
-	if createNewVersion || bytes.Compare(v.Payload.Data, data) != 0 {
+	if createNewVersion || !bytes.Equal(v.Payload.Data, data) {
 		log.Printf("add secret version to %s", secretName)
 		_, err := s.k.AddSecretVersion(ctx, &secretmanagerpb.AddSecretVersionRequest{
 			Parent: fmt.Sprintf("projects/%s/secrets/%s", s.projectId, secretName),

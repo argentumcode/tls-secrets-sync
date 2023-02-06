@@ -11,6 +11,7 @@ import (
 	"google.golang.org/api/option"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 )
 
@@ -62,7 +63,7 @@ func fakeServerForSecretManager(t *testing.T) (*secretmanager.Client, *fakeSecre
 	client, err := secretmanager.NewClient(context.Background(),
 		option.WithEndpoint(fakeServerAddr),
 		option.WithoutAuthentication(),
-		option.WithGRPCDialOption(grpc.WithInsecure()),
+		option.WithGRPCDialOption(grpc.WithTransportCredentials(insecure.NewCredentials())),
 	)
 	if err != nil {
 		t.Fatal(err)

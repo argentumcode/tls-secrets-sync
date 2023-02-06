@@ -73,7 +73,7 @@ func (s *KubernetesSyncer) Sync(ctx context.Context, tlsCert []byte, tlsKey []by
 			}
 			if createSecret {
 				// Sync
-				if bytes.Compare(secret.Data["tls.key"], tlsKey) != 0 || bytes.Compare(secret.Data["tls.crt"], tlsCert) != 0 {
+				if !bytes.Equal(secret.Data["tls.key"], tlsKey) || !bytes.Equal(secret.Data["tls.crt"], tlsCert) {
 					// Update Secret
 					log.Printf("update secret for namespace=%s,name=%s", ns.Name, s.secretName)
 					secret.Data["tls.key"] = tlsKey
