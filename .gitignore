@@ -1,2 +1,6 @@
 /build
 /dist
+
+# google-github-actionsはworkspaceのディレクトリにファイルを作成するため除外
+#   refs:https://github.com/google-github-actions/auth#prerequisites
+gha-creds-*.json
