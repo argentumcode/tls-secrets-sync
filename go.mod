@@ -1,6 +1,8 @@
 module github.com/argentumcode/tls-secrets-sync
 
-go 1.19
+go 1.21
+
+toolchain go1.21.4
 
 require (
 	cloud.google.com/go/certificatemanager v1.4.0
