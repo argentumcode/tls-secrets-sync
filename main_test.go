@@ -19,7 +19,7 @@ func prepareFake(t *testing.T) *fakeSecretManagerServer {
 
 func TestRootCmd(t *testing.T) {
 	validSourceK8sArgs := []string{"--source-type", "kubernetes", "--source-namespace", "certs", "--secret-name", "piyo"}
-	validSourceSecretManagerArgs := []string{"--source-type", "secret-manager", "--gcp-project", "test-project", "--cert-secret", "cert-secret", "--key-secret", "key-secret"}
+	validSourceSecretManagerArgs := []string{"--source-type", "secret-manager", "--secret-manager-gcp-project", "test-project", "--cert-secret", "cert-secret", "--key-secret", "key-secret"}
 	testCases := []struct {
 		Name          string
 		Args          []string
@@ -51,12 +51,12 @@ func TestRootCmd(t *testing.T) {
 		},
 		{
 			Name:          "No Cert Secret Argument",
-			Args:          []string{"--source-type", "secret-manager", "--gcp-project", "test-project", "--key-secret", "key-secret"},
+			Args:          []string{"--source-type", "secret-manager", "--secret-manager-gcp-project", "test-project", "--key-secret", "key-secret"},
 			ExpectedError: "cert-secret is required",
 		},
 		{
 			Name:          "No Key Secret Argument",
-			Args:          []string{"--source-type", "secret-manager", "--gcp-project", "test-project", "--cert-secret", "cert-secret"},
+			Args:          []string{"--source-type", "secret-manager", "--secret-manager-gcp-project", "test-project", "--cert-secret", "cert-secret"},
 			ExpectedError: "key-secret is required",
 		},
 		{
@@ -66,12 +66,12 @@ func TestRootCmd(t *testing.T) {
 		},
 		{
 			Name:          "Secret Manager Sync No Cert Secret",
-			Args:          append(validSourceK8sArgs, "--sync-types", "secret-manager", "--gcp-project", "test-project", "--key-secret", "key-secret"),
+			Args:          append(validSourceK8sArgs, "--sync-types", "secret-manager", "--secret-manager-gcp-project", "test-project", "--key-secret", "key-secret"),
 			ExpectedError: "cert-secret is required",
 		},
 		{
 			Name:          "Secret Manager Sync No Key Secret",
-			Args:          append(validSourceK8sArgs, "--sync-types", "secret-manager", "--gcp-project", "test-project", "--cert-secret", "cert-secret"),
+			Args:          append(validSourceK8sArgs, "--sync-types", "secret-manager", "--secret-manager-gcp-project", "test-project", "--cert-secret", "cert-secret"),
 			ExpectedError: "key-secret is required",
 		},
 		{
