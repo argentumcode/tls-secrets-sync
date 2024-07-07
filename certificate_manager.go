@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"log"
-	"strings"
 
 	certificatemanager "cloud.google.com/go/certificatemanager/apiv1"
 	"cloud.google.com/go/certificatemanager/apiv1/certificatemanagerpb"
@@ -112,25 +111,13 @@ func (c *CertificateManagerSyncer) Sync(ctx context.Context, tlsCert []byte, tls
 		}
 		log.Printf("Complete creating certificate map entry \"%s\"", c.certificateMapEntryName)
 	} else {
-		updateCertificate := false
-		containesCertificate := false
-		for _, certificate := range mapEntry.Certificates {
-			if strings.Split(certificate, "/")[5] == certificateName {
-				containesCertificate = true
-				break
-			}
-		}
-		if !containesCertificate {
-			mapEntry.Certificates = append(mapEntry.Certificates, certificateFullName)
-			updateCertificate = true
-		}
+		updateCertificate := true
 		var removeCertificates []string
-		if len(mapEntry.Certificates) >= 3 {
-			removeCertificates = mapEntry.Certificates[:len(mapEntry.Certificates)-2]
-			mapEntry.Certificates = mapEntry.Certificates[len(mapEntry.Certificates)-2:]
+		if len(mapEntry.Certificates) != 1 || mapEntry.Certificates[0] != certificateFullName {
 			updateCertificate = true
+			removeCertificates = mapEntry.Certificates
+			mapEntry.Certificates = []string{certificateFullName}
 		}
-
 		if updateCertificate {
 			log.Printf("Start updating certificate map entry \"%s\"", c.certificateMapEntryName)
 			op, err := c.client.UpdateCertificateMapEntry(ctx, &certificatemanagerpb.UpdateCertificateMapEntryRequest{
